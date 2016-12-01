@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cross and zero</title>
+    <script type="text/javascript">
+        var cell = new Array(9); // initialize new Array
+        for (var i = 0; i < cell.length; i++) { cell[i] = 0 } // fill all array value zero
+
+            function checkVictory() { // checking if we have across a board something other than zero we have winner
+                if(cell[0] == cell[1] && cell[1] == cell[2] && cell[2] > 0) return true;
+                if(cell[3] == cell[4] && cell[4] == cell[5] && cell[5] > 0) return true;
+                if(cell[6] == cell[7] && cell[7] == cell[8] && cell[8] > 0) return true;
+                if(cell[0] == cell[3] && cell[3] == cell[6] && cell[6] > 0) return true;
+                if(cell[1] == cell[4] && cell[4] == cell[7] && cell[7] > 0) return true;
+                if(cell[2] == cell[5] && cell[5] == cell[8] && cell[8] > 0) return true;
+                if(cell[0] == cell[4] && cell[4] == cell[8] && cell[8] > 0) return true;
+                if(cell[6] == cell[4] && cell[4] == cell[2] && cell[2] > 0) return true;
+            }
+
+        function compStep() {
+            var fillGap=0; // initialize variable for index "cell" array
+            for(let i=0; i<9; i++){ if(cell[i] == 0){fillGap = i; }}; // find all empty index if we had we mark it
+            for(let i=0; i<3; i++){
+            // checking for the presence of combinations
+            if(cell[0] == cell[5] && cell[2] == 0 && cell[5] == i) fillGap = 2;
+            if(cell[0] == cell[7] && cell[6] == 0 && cell[7] == i) fillGap = 6;
+            if(cell[2] == cell[7] && cell[8] == 0 && cell[7] == i) fillGap = 8;
+            // checking horizontal lines
+            if(cell[0] == cell[1] && cell[2] == 0 && cell[0] == i) fillGap = 2;
+            if(cell[0] == cell[2] && cell[1] == 0 && cell[0] == i) fillGap = 1;
+            if(cell[1] == cell[2] && cell[0] == 0 && cell[1] == i) fillGap = 0;
+            if(cell[3] == cell[4] && cell[5] == 0 && cell[3] == i) fillGap = 5;
+            if(cell[3] == cell[5] && cell[4] == 0 && cell[3] == i) fillGap = 4;
+            if(cell[4] == cell[5] && cell[3] == 0 && cell[4] == i) fillGap = 3;
+            if(cell[6] == cell[7] && cell[8] == 0 && cell[6] == i) fillGap = 8;
+            if(cell[6] == cell[8] && cell[7] == 0 && cell[6] == i) fillGap = 7;
+            if(cell[7] == cell[8] && cell[6] == 0 && cell[7] == i) fillGap = 6;
+            // checking vertical lines
+            if(cell[0] == cell[3] && cell[6] == 0 && cell[0] == i) fillGap = 6;
+            if(cell[0] == cell[6] && cell[3] == 0 && cell[0] == i) fillGap = 3;
+            if(cell[3] == cell[6] && cell[0] == 0 && cell[3] == i) fillGap = 0;
+            if(cell[1] == cell[4] && cell[7] == 0 && cell[1] == i) fillGap = 7;
+            if(cell[1] == cell[7] && cell[4] == 0 && cell[1] == i) fillGap = 4;
+            if(cell[4] == cell[7] && cell[1] == 0 && cell[4] == i) fillGap = 1;
+            if(cell[2] == cell[5] && cell[8] == 0 && cell[2] == i) fillGap = 8;
+            if(cell[2] == cell[8] && cell[5] == 0 && cell[2] == i) fillGap = 5;
+            if(cell[5] == cell[8] && cell[2] == 0 && cell[5] == i) fillGap = 2;
+            // checking diagonal lines
+            if(cell[0] == cell[4] && cell[8] == 0 && cell[0] == i) fillGap = 8;
+            if(cell[4] == cell[8] && cell[0] == 0 && cell[4] == i) fillGap = 0;
+            if(cell[0] == cell[8] && cell[4] == 0 && cell[0] == i) fillGap = 4;
+            if(cell[6] == cell[4] && cell[2] == 0 && cell[6] == i) fillGap = 2;
+            if(cell[4] == cell[2] && cell[6] == 0 && cell[4] == i) fillGap = 6;
+            if(cell[6] == cell[2] && cell[4] == 0 && cell[6] == i) fillGap = 4;
+            }
+            if(cell[fillGap] == 0 ){ // if all lines doesn't have match we have prepare fillGap
+            cell[fillGap] = 2; // change value in array to 2
+            document.getElementById("field"+fillGap).innerHTML = "cross";
+            if(checkVictory()){ // if checkVictory return true we show alert and restore game
+                alert("Game Over");
+                endGame();
+            }
+            }
+        }
+
+        function checkDraw() {
+            let draw = false; // prepare variable with value false
+            for(let i=0;i<9;i++){ if(cell[i] == 0){ draw = true; } } // if we have empty value we change on true
+                if(!draw){ // if we have not not true
+                    alert("Draw"); // show alert
+                    endGame(); // destruct game
+                }
+       }
+        function endGame() { // restore all board in loop
+            for(let i=0;i<9;i++){
+                cell[i] = 0;
+                document.getElementById("field"+i).innerHTML = "";
+            }
+        }
+
+        function run(val) {
+            if(cell[val] == 0){ // checking if we have zero value we change it or nothing
+                cell[val] = 1; // change to one
+                document.getElementById("field"+val).innerHTML = "zero"; // on board we change it on zero
+                if(checkVictory()){ // checking victory is it true
+                    alert("You Win"); // show alert
+                    endGame(); // destruct game
+                }else{
+                        checkDraw(); // check if we don't have free spaces
+                        compStep(); // run computer
+                        checkDraw();
+                };
+            }
+        }
+
+    </script>
+</head>
+<body style="background-color: #3d3d3d;">
+<table style="color:#fff; position: absolute;left: calc(50% - 480px / 2); top: calc(50% - 480px / 2); " bgcolor="#000" border="3" bordercolor="#9f9" cellspacing="0">
+    <tr>
+        <td id="field0" valign="center" align="center" width="156" height="156" onclick="run(0)"></td>
+        <td id="field1" valign="center" align="center" width="156" height="156" onclick="run(1)"></td>
+        <td id="field2" valign="center" align="center" width="156" height="156" onclick="run(2)"></td>
+    </tr>
+    <tr>
+        <td id="field3" valign="center" align="center" width="156" height="156" onclick="run(3)"></td>
+        <td id="field4" valign="center" align="center" width="156" height="156" onclick="run(4)"></td>
+        <td id="field5" valign="center" align="center" width="156" height="156" onclick="run(5)"></td>
+    </tr>
+    <tr>
+        <td id="field6" valign="center" align="center" width="156" height="156" onclick="run(6)"></td>
+        <td id="field7" valign="center" align="center" width="156" height="156" onclick="run(7)"></td>
+        <td id="field8" valign="center" align="center" width="156" height="156" onclick="run(8)"></td>
+    </tr>
+</table>
+</body>
+</html>
